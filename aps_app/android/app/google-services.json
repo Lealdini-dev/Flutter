@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "156548255355",
+    "firebase_url": "https://aps-app-2020.firebaseio.com",
+    "project_id": "aps-app-2020",
+    "storage_bucket": "aps-app-2020.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:156548255355:android:4f953c948e5d4b289f5cde",
+        "android_client_info": {
+          "package_name": "com.lealdini.fabio.aps_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "156548255355-tv4ei7llt0mjk7j9kun88eu6cvd04v5b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4aIyrOGWBb-PlYD2TnL9RuAJv_2CXD3Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "156548255355-tv4ei7llt0mjk7j9kun88eu6cvd04v5b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
