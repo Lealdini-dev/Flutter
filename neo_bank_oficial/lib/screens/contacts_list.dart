@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:neo_bank_oficial/components/progress.dart';
 import 'package:neo_bank_oficial/database/dao/contact_dao.dart';
 import 'package:neo_bank_oficial/models/contact.dart';
 import 'package:neo_bank_oficial/screens/contact_form.dart';
+import 'package:neo_bank_oficial/screens/transaction_form.dart';
 
 class ContactsList extends StatefulWidget {
   @override
@@ -10,11 +12,12 @@ class ContactsList extends StatefulWidget {
 
 class _ContactsListState extends State<ContactsList> {
   final ContactDao _dao = ContactDao();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Contacts'),
+        title: Text('Transfer'),
       ),
       body: FutureBuilder<List<Contact>>(
         initialData: List(),
@@ -24,16 +27,7 @@ class _ContactsListState extends State<ContactsList> {
             case ConnectionState.none:
               break;
             case ConnectionState.waiting:
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    CircularProgressIndicator(),
-                    Text('Loading'),
-                  ],
-                ),
-              );
+              return Progress();
               break;
             case ConnectionState.active:
               break;
@@ -42,7 +36,12 @@ class _ContactsListState extends State<ContactsList> {
               return ListView.builder(
                 itemBuilder: (context, index) {
                   final Contact contact = contacts[index];
-                  return _ContactItem(contact);
+                  return _ContactItem(
+                    contact,
+                    onClick: () {
+                      onShowTransferForm(context, contact);
+                    },
+                  );
                 },
                 itemCount: contacts.length,
               );
@@ -55,9 +54,11 @@ class _ContactsListState extends State<ContactsList> {
         backgroundColor: Color.fromRGBO(242, 242, 242, 1),
         child: Icon(Icons.add),
         onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(
+          Navigator.of(context)
+              .push(MaterialPageRoute(
             builder: (context) => ContactForm(),
-          )).then((value) {
+          ))
+              .then((value) {
             setState(() {
               widget.createState();
             });
@@ -66,17 +67,24 @@ class _ContactsListState extends State<ContactsList> {
       ),
     );
   }
+
+  void onShowTransferForm(BuildContext context, Contact contact) {
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => TransactionForm(contact)));
+  }
 }
 
 class _ContactItem extends StatelessWidget {
   final Contact contact;
+  final Function onClick;
 
-  _ContactItem(this.contact);
+  _ContactItem(this.contact, {@required this.onClick});
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
+        onTap: () => onClick(),
         title: Text(
           contact.name,
           style: TextStyle(fontSize: 24),
