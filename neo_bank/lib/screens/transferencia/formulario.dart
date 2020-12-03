@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:neo_bank/components/editor.dart';
+import 'package:neo_bank/models/saldo.dart';
 import 'package:neo_bank/models/transferencia.dart';
+import 'package:neo_bank/models/transferencias.dart';
+import 'package:provider/provider.dart';
 
 const _tituloAppBar = 'Criando Transferencia';
 const _rotuloCampoValor = 'Valor';
@@ -9,15 +12,7 @@ const _rotuloCampoNumeroConta = 'Número da Conta';
 const _dicaCampoNumeroConta = '0000';
 const _textoBotaoConfirmar = 'Confirmar';
 
-
-class FormularioTransferencia extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return FormularioTransferenciaState();
-  }
-}
-
-class FormularioTransferenciaState extends State<FormularioTransferencia> {
+class FormularioTransferencia extends StatelessWidget {
   final TextEditingController _controladorCampoNumeroConta =
       TextEditingController();
   final TextEditingController _controladorCampovalor = TextEditingController();
@@ -56,9 +51,28 @@ class FormularioTransferenciaState extends State<FormularioTransferencia> {
   void _criarTransferencia(BuildContext context) {
     final int numeroConta = int.tryParse(_controladorCampoNumeroConta.text);
     final double valor = double.tryParse(_controladorCampovalor.text);
-    if (numeroConta != null && valor != null) {
-      final trasnferenciaCriada = Transferencia(valor, numeroConta);
-      Navigator.pop(context, trasnferenciaCriada);
+    final transferenciaValida =
+        _validaTransferencia(context, numeroConta, valor);
+    if (transferenciaValida) {
+      final novaTransferencia = Transferencia(valor, numeroConta);
+      _atualizaEstado(context, novaTransferencia, valor);
+      Navigator.pop(context);
     }
+  }
+
+  _atualizaEstado(context, novaTransferencia, valor) {
+    Provider.of<Transferencias>(context, listen: false)
+        .adiciona(novaTransferencia);
+    Provider.of<Saldo>(context, listen: false).subtrair(valor);
+  }
+
+  _validaTransferencia(context, numeroConta, valor) {
+    final _camposPreenchidos = numeroConta != null && valor != null;
+    final _saldoSuficiente = valor <=
+        Provider.of<Saldo>(
+          context,
+          listen: false,
+        ).valor;
+    return _camposPreenchidos && _saldoSuficiente;
   }
 }

@@ -6,12 +6,18 @@ import 'package:neo_bank_oficial/screens/contact_form.dart';
 import 'package:neo_bank_oficial/screens/transaction_form.dart';
 
 class ContactsList extends StatefulWidget {
+  final ContactDao contactDao;
+
+  ContactsList({@required this.contactDao});
+
   @override
-  _ContactsListState createState() => _ContactsListState();
+  ContactsListState createState() => ContactsListState(contactDao: contactDao);
 }
 
-class _ContactsListState extends State<ContactsList> {
-  final ContactDao _dao = ContactDao();
+class ContactsListState extends State<ContactsList> {
+  final ContactDao contactDao;
+
+  ContactsListState({@required this.contactDao});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +27,7 @@ class _ContactsListState extends State<ContactsList> {
       ),
       body: FutureBuilder<List<Contact>>(
         initialData: List(),
-        future: _dao.findAll(),
+        future: contactDao.findAll(),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -56,7 +62,9 @@ class _ContactsListState extends State<ContactsList> {
         onPressed: () {
           Navigator.of(context)
               .push(MaterialPageRoute(
-            builder: (context) => ContactForm(),
+            builder: (context) => ContactForm(
+              contactDao: contactDao,
+            ),
           ))
               .then((value) {
             setState(() {
