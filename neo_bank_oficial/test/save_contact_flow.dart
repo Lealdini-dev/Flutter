@@ -14,7 +14,7 @@ void main() {
     await tester.pumpWidget(NeoBankApp(
       contactDao: mockContactDao,
     ));
-    final dashboard = find.byType(Dashboard);
+    final dashboard = find.byType(DashboardContainer);
     expect(dashboard, findsOneWidget);
     final transferFeatureItem = find.byWidgetPredicate((widget) =>
         featureFeatureItemMatcher(

@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:neo_bank_oficial/database/dao/contact_dao.dart';
 import 'package:neo_bank_oficial/screens/contacts_list.dart';
+import 'package:neo_bank_oficial/screens/name.dart';
 import 'package:neo_bank_oficial/screens/transaction_list.dart';
 
-class Dashboard extends StatelessWidget {
+class DashboardContainer extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => NameCubit('Guilherme'),
+      child: DashboardView(),
+    );
+  }
+}
+
+class DashboardView extends StatelessWidget {
   final ContactDao contactDao;
 
-  Dashboard({@required this.contactDao});
+  DashboardView({@required this.contactDao});
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +56,13 @@ class Dashboard extends StatelessWidget {
                           _showTransactionsList(context);
                         },
                       ),
+                      FeatureItem(
+                        'Transaction Feed',
+                        Icons.person_outline,
+                        onClick: () {
+                          _showChangeName(context);
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -56,8 +75,13 @@ class Dashboard extends StatelessWidget {
   }
 
   void _showContactList(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => ContactsList(contactDao: contactDao)));
+  }
+
+  void _showChangeName(BuildContext context) {
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => ContactsList(contactDao: contactDao)));
+        .push(MaterialPageRoute(builder: (context) => NameContainer()));
   }
 
   void _showTransactionsList(BuildContext context) {

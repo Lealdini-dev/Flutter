@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:neo_bank_oficial/database/dao/contact_dao.dart';
 import 'package:neo_bank_oficial/screens/dashboard.dart';
 
@@ -8,6 +9,14 @@ void main() {
   ));
 }
 
+class LogObserver extends BlocObserver {
+  @override
+  void onChange(Cubit cubit, Change change) {
+    print('${cubit.runtimeType}> $change');
+    super.onChange(cubit, change);
+  }
+}
+
 class NeoBankApp extends StatelessWidget {
   final ContactDao contactDao;
 
@@ -15,6 +24,11 @@ class NeoBankApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(theme: ThemeData.dark(), home: Dashboard(contactDao: contactDao));
+    Bloc.observer = LogObserver();
+
+    return MaterialApp(
+      theme: ThemeData.dark(),
+      home: DashboardContainer(),
+    );
   }
 }
